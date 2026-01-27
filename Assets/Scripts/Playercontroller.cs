@@ -1,13 +1,14 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Playercontroller : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [Header("ÒÆ„Ó")]
-    private float moveSpeed = 1.0f;
-    private float turnSpeed = 40f;
+    public float moveSpeed = 1.0f;
+    public float turnSpeed = 40f;
 
     [Header("ÌøÔ¾")]
     public float jumpForce = 5f;
@@ -17,6 +18,7 @@ public class Playercontroller : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
