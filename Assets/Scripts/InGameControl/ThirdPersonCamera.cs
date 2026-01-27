@@ -38,7 +38,7 @@ public class ThirdPersonCamera : MonoBehaviour
     }
     private void CameraFollow()
     {
-        //攝像機第三人稱跟隨
+        //攝像機第三人稱
         if (!target) return;
         Vector3 desiredPosition = target.position + target.rotation * offset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
