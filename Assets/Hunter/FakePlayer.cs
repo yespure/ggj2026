@@ -1,63 +1,43 @@
-using Mirror;
 using UnityEngine;
+using Mirror;
+using Cinemachine;
 
 public class FakePlayer : NetworkBehaviour
 {
-    [Header("Settings")]
-    public float moveSpeed = 5f;
-    public float sensitivity = 2f;
+    [Header("Hover Settings")]
+    public float moveSpeed = 10f;
+    public float rotateSpeed = 10f;
+    public float deceleration = 5f; // stop damping
 
     [Header("References")]
-    public Camera playerCamera;
+    private CinemachineFreeLook freeLookCam;
+    private Transform mainCamTransform;
+    private Vector3 currentVelocity;
 
-    private float pitchAngleX = 0f;
-    private float yawAngleY = 0f;
-
-    // Mirror specific method
-    // When this object is set up as the local player, this method is automatically called
     public override void OnStartLocalPlayer()
     {
-        if (playerCamera != null)
+        freeLookCam = FindObjectOfType<CinemachineFreeLook>();
+        mainCamTransform = Camera.main.transform;
+
+        if (freeLookCam == null) Debug.LogError("No Cinemachine FreeLook Camera found in the scene.");
+        if (freeLookCam != null)
         {
-            playerCamera.gameObject.SetActive(true);
+            freeLookCam.Follow = transform;
+            freeLookCam.LookAt = transform;
+
+            // Ensure the camera maintains its world space orientation
+            freeLookCam.m_BindingMode = CinemachineTransposer.BindingMode.WorldSpace;
         }
 
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = false;
-    }
-
-    // When the object loaded, ensure only the local player's camera is active
-    void Start()
-    {
-        if (!isLocalPlayer && playerCamera != null)
-        {
-            playerCamera.gameObject.SetActive(false);
-            AudioListener listener = playerCamera.GetComponent<AudioListener>();
-            if (listener) listener.enabled = false;
-        }
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Update()
     {
-        // **IMPORTANT**: Only process input for the local player
         if (!isLocalPlayer) return;
 
-        HandleRotation();
         HandleMovement();
-    }
-
-    void HandleRotation()
-    {
-        float mouseXInput = Input.GetAxis("Mouse X") * sensitivity;
-        float mouseYInput = Input.GetAxis("Mouse Y") * sensitivity;
-
-        yawAngleY += mouseXInput;
-        pitchAngleX -= mouseYInput;
-
-        pitchAngleX = Mathf.Clamp(pitchAngleX, -89f, 89f);
-
-        Quaternion targetRotation = Quaternion.Euler(pitchAngleX, yawAngleY, 0f);
-        transform.localRotation = targetRotation;
     }
 
     void HandleMovement()
@@ -65,8 +45,29 @@ public class FakePlayer : NetworkBehaviour
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
-        Vector3 direction = (transform.forward * v + transform.right * h).normalized;
+        // If no input, decelerate to a stop
+        if (Mathf.Abs(h) < 0.01f && Mathf.Abs(v) < 0.01f)
+        {
+            currentVelocity = Vector3.Lerp(currentVelocity, Vector3.zero, Time.deltaTime * deceleration);
+            transform.position += currentVelocity * Time.deltaTime;
+            return;
+        }
 
-        transform.Translate(direction * moveSpeed * Time.deltaTime, Space.World);
+        Vector3 camFwd = mainCamTransform.forward;
+        Vector3 camRight = mainCamTransform.right;
+
+        Vector3 targetDirection = (camFwd * v + camRight * h).normalized;
+        Vector3 targetVelocity = targetDirection * moveSpeed;
+
+        currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, Time.deltaTime * 5f);
+
+        transform.position += currentVelocity * Time.deltaTime;
+
+        // Rotate towards movement direction
+        if (currentVelocity.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotateSpeed);
+        }
     }
 }
