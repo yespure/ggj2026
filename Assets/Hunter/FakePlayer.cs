@@ -6,8 +6,8 @@ public class FakePlayer : NetworkBehaviour
 {
     [Header("Hover Settings")]
     public float moveSpeed = 10f;
-    public float rotateSpeed = 10f; // 模型转身的速度
-    public float deceleration = 5f; // 停止时的惯性阻尼
+    public float rotateSpeed = 10f;
+    public float deceleration = 5f; // stop damping
 
     [Header("References")]
     private CinemachineFreeLook freeLookCam;
@@ -19,12 +19,13 @@ public class FakePlayer : NetworkBehaviour
         freeLookCam = FindObjectOfType<CinemachineFreeLook>();
         mainCamTransform = Camera.main.transform;
 
+        if (freeLookCam == null) Debug.LogError("No Cinemachine FreeLook Camera found in the scene.");
         if (freeLookCam != null)
         {
             freeLookCam.Follow = transform;
             freeLookCam.LookAt = transform;
 
-            // 确保相机处于 World Space 模式，否则相机视角会受玩家旋转影响
+            // Ensure the camera maintains its world space orientation
             freeLookCam.m_BindingMode = CinemachineTransposer.BindingMode.WorldSpace;
         }
 
@@ -44,7 +45,7 @@ public class FakePlayer : NetworkBehaviour
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
-        // 如果没有输入，就进行减速（阻尼效果），并不改变朝向，此时玩家可以自由转动相机，而不影响角色
+        // If no input, decelerate to a stop
         if (Mathf.Abs(h) < 0.01f && Mathf.Abs(v) < 0.01f)
         {
             currentVelocity = Vector3.Lerp(currentVelocity, Vector3.zero, Time.deltaTime * deceleration);
@@ -62,7 +63,7 @@ public class FakePlayer : NetworkBehaviour
 
         transform.position += currentVelocity * Time.deltaTime;
 
-        // 旋转角色模型
+        // Rotate towards movement direction
         if (currentVelocity.magnitude > 0.1f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
