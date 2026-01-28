@@ -379,7 +379,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 263450344}
   followSpeed: 10
-  rotateSpeed: 10
   offset: {x: 0, y: 1.6, z: -4}
   mouseSensitivity: 120
   minPitch: -30
@@ -417,10 +416,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4075472aade6ce41933b692940af80b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMethod: 0
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
   moveSpeed: 0.4
   turnSpeed: 20
   jumpForce: 5

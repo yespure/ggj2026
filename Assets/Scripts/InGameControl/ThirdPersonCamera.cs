@@ -4,47 +4,51 @@ using UnityEngine;
 
 public class ThirdPersonCamera : MonoBehaviour
 {
-    [Header("視角跟隨")]
+    [Header("追踪设置")]
     public Transform target;
     public float followSpeed = 10f;
-    public float rotateSpeed = 10f;
     public Vector3 offset = new Vector3(0f, 1.6f, -4f);
 
-    [Header("攝像機移動")]
-    public float mouseSensitivity = 120f;
-    public float minPitch = -30f;
-    public float maxPitch = 60f;
+    [Header("鼠标控制")]
+    public float mouseSensitivity = 200f;
+    public float minPitch = -20f;
+    public float maxPitch = 45f;
+
     private float yaw;
     private float pitch;
+
+    void Start()
+    {
+        yaw = 0f;
+        pitch = 0f;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    void Update()
+    {
+        CameraMove();
+    }
 
     void LateUpdate()
     {
         CameraFollow();
-       // CameraMove();
     }
 
-    private void CameraMove()
+    void CameraMove()
     {
-        //攝像機範圍内移動
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-
-        yaw += mouseX;
-        pitch -= mouseY;
+        yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
-
-
-        transform.rotation = Quaternion.Euler(pitch, yaw, 0f);
     }
-    private void CameraFollow()
+
+    void CameraFollow()
     {
-        //攝像機第三人稱
         if (!target) return;
-        Vector3 desiredPosition = target.position + target.rotation * offset;
+        Quaternion rotation = Quaternion.Euler(pitch, target.eulerAngles.y + yaw, 0);
+        Vector3 desiredPosition = target.position + rotation * offset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
-        Vector3 lookTarget = target.position + Vector3.up * 1.5f;
-        Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+        Vector3 lookPoint = target.position + Vector3.up * offset.y;
+        transform.LookAt(lookPoint);
     }
 }
-    
