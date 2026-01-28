@@ -1,10 +1,8 @@
-using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviour
+public class ObjectController : MonoBehaviour
 {
     [Header("移動")]
     public float moveSpeed = 1.0f;
@@ -13,30 +11,35 @@ public class PlayerController : MonoBehaviour
     [Header("跳跃")]
     public float jumpForce = 5f;
     public bool isGrounded = true;
-    private Rigidbody rb;
+    protected  Rigidbody rb;
+
+    [Header("Controljudgement")]
+    public bool isControlled = false;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!isControlled) return;
         Move();
         Jump();
+        Specialability();
     }
     //以下本地坐標移動
-    private void Move()
+    protected virtual void Move()
     {
-        
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        
+
         {
             //轉向邏輯
-            Quaternion targetRotation = Quaternion.Euler (
+            Quaternion targetRotation = Quaternion.Euler(
                 0f,
                 horizontal * turnSpeed * Time.fixedDeltaTime,
                 0f
@@ -74,7 +77,7 @@ public class PlayerController : MonoBehaviour
     }
     */
 
-    private void Jump()
+    protected virtual void Jump()
     {
         //跳躍邏輯(Rigidbody)
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
@@ -83,8 +86,8 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
         }
     }
-    
-    private void OnCollisionEnter(Collision collision)
+
+    protected virtual void OnCollisionEnter(Collision collision)
     {
         //地面檢測
         if (collision.gameObject.CompareTag("Ground"))
@@ -92,4 +95,19 @@ public class PlayerController : MonoBehaviour
             isGrounded = true;
         }
     }
+
+    protected virtual void Specialability()
+    {
+
+    }
+    public virtual void OnPossessed()
+    {
+        isControlled = true;
+    }
+
+    public virtual void OnUnPossessed()
+    {
+        isControlled = false;
+    }
+
 }
