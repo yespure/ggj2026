@@ -1,6 +1,7 @@
 using UnityEngine;
 using Mirror;
 using Cinemachine;
+using System;
 
 public class FakePlayer : NetworkBehaviour
 {

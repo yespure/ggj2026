@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BoardPainter : MonoBehaviour
@@ -11,6 +12,7 @@ public class BoardPainter : MonoBehaviour
     private Transform currentBoard;   // 当前正在画的那个画板
     private int positionCount = 0;
     private Vector3 lastLocalPos;
+
 
     void Update()
     {
@@ -72,7 +74,10 @@ public class BoardPainter : MonoBehaviour
         // 必须检测是否还在同一个画板上
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, boardLayer))
         {
-            if (hit.transform != currentBoard) return; // 如果滑到了另一个物体上，停止绘制
+            if (hit.transform != currentBoard)
+            {
+                return; // 如果滑到了另一个物体上，停止绘制
+            } 
 
             AddPoint(hit.point, hit.normal);
         }
