@@ -29,8 +29,8 @@ public class FakePlayer : NetworkBehaviour
             freeLookCam.m_BindingMode = CinemachineTransposer.BindingMode.WorldSpace;
         }
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
 
     void Update()
@@ -60,6 +60,7 @@ public class FakePlayer : NetworkBehaviour
         Vector3 targetVelocity = targetDirection * moveSpeed;
 
         currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, Time.deltaTime * 5f);
+        Debug.Log(currentVelocity);
 
         transform.position += currentVelocity * Time.deltaTime;
 
