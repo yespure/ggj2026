@@ -11,7 +11,7 @@ public class ObjectController : MonoBehaviour
     [Header("跳跃")]
     public float jumpForce = 5f;
     public bool isGrounded = true;
-    private Rigidbody rb;
+    protected  Rigidbody rb;
 
     [Header("Controljudgement")]
     public bool isControlled = false;
@@ -19,7 +19,7 @@ public class ObjectController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-
+        
     }
 
     // Update is called once per frame
@@ -28,6 +28,7 @@ public class ObjectController : MonoBehaviour
         if (!isControlled) return;
         Move();
         Jump();
+        Specialability();
     }
     //以下本地坐標移動
     protected virtual void Move()
@@ -95,7 +96,7 @@ public class ObjectController : MonoBehaviour
         }
     }
 
-    public virtual void Specialability()
+    protected virtual void Specialability()
     {
 
     }

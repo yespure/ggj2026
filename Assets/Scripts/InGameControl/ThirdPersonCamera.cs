@@ -17,6 +17,7 @@ public class ThirdPersonCamera : MonoBehaviour
     private float yaw;
     private float pitch;
 
+
     void Start()
     {
         yaw = 0f;

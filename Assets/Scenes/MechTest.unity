@@ -789,8 +789,8 @@ GameObject:
   - component: {fileID: 1791210010}
   - component: {fileID: 1791210009}
   - component: {fileID: 1791210008}
-  - component: {fileID: 1791210012}
   - component: {fileID: 1791210013}
+  - component: {fileID: 1791210014}
   m_Layer: 3
   m_Name: testposessedobj
   m_TagString: Possessable
@@ -884,23 +884,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1791210012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1791210006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d1350dc63d5dfe4b9e7e0e89698ca8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 1
-  turnSpeed: 40
-  jumpForce: 5
-  isGrounded: 1
-  isControlled: 0
 --- !u!54 &1791210013
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -928,6 +911,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1791210014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791210006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 780d02e7bbd84314d96c13a05e82fe04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 1
+  turnSpeed: 40
+  jumpForce: 5
+  isGrounded: 1
+  isControlled: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
