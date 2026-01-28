@@ -63,7 +63,7 @@ public class PlayerMode : MonoBehaviour
         // }
         DrawingMode(playerState[0]);
         MaskRagDoll(playerState[1]);
-        NormalMode(!playerState[2]);
+        NormalMode(playerState[2]);
     }
 
     public void MaskRagDoll(bool ragdollOn)
