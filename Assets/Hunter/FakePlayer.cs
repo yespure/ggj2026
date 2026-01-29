@@ -15,7 +15,7 @@ public class FakePlayer : NetworkBehaviour
     private Transform mainCamTransform;
     private Vector3 currentVelocity;
 
-    public bool isControlled= true;
+    public bool isTakeoverControl = false;
     public override void OnStartLocalPlayer()
     {
         freeLookCam = FindObjectOfType<CinemachineFreeLook>();
@@ -44,6 +44,8 @@ public class FakePlayer : NetworkBehaviour
 
     void HandleMovement()
     {
+        if (isTakeoverControl) return;
+
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
@@ -52,6 +54,7 @@ public class FakePlayer : NetworkBehaviour
         {
             currentVelocity = Vector3.Lerp(currentVelocity, Vector3.zero, Time.deltaTime * deceleration);
             transform.position += currentVelocity * Time.deltaTime;
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
             return;
         }
 
@@ -72,5 +75,21 @@ public class FakePlayer : NetworkBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotateSpeed);
         }
+    }
+
+    public void TakeoverControl(Transform who)
+    {
+        isTakeoverControl = true;
+        freeLookCam.Follow = who;
+        freeLookCam.LookAt = who;
+        GetComponent<Rigidbody>().isKinematic = true;
+    }
+
+    public void ReleaseControl()
+    {
+        isTakeoverControl = false;
+        freeLookCam.Follow = transform;
+        freeLookCam.LookAt = transform;
+        GetComponent<Rigidbody>().isKinematic = false;
     }
 }
