@@ -19,6 +19,8 @@ public class Balls : ObjectController
     {
         base.OnUnPossessed();
         Debug.Log($"{name} released!");
+        
+        B_IsPossessing?.Invoke(false);
     }
     protected override void Specialability()
     {
