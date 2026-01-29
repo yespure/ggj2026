@@ -38,7 +38,7 @@ public class PlayerMode : MonoBehaviour
         // FakePlayer.OnDrawing += DrawingMode;
         // FakePlayer.IsNormal += NormalMode;
     }
-    void ODisable()
+    void OnDisable()
     {
         // FakePlayer.RagdollOn -= MaskRagDoll;
         // FakePlayer.OnDrawing -= DrawingMode;
@@ -63,7 +63,7 @@ public class PlayerMode : MonoBehaviour
         // }
         DrawingMode(playerState[0]);
         MaskRagDoll(playerState[1]);
-        NormalMode(playerState[2]);
+        NormalMode(!playerState[2]);
     }
 
     public void MaskRagDoll(bool ragdollOn)

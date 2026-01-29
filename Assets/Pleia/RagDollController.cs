@@ -59,9 +59,9 @@ public class RagDollController : MonoBehaviour
 
     void C_IsDead(bool isPossessed)
     {
-        if (character.human_animator == null & rb == null) return;
+        //if (character.human_animator == null & rb == null) return;
 
-        character.human_animator.enabled = !isPossessed;
+        //character.human_animator.enabled = !isPossessed;
     }
 
     void B_IsDead(bool isPossessed)

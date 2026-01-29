@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.PlasticSCM.Editor.WebApi;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ObjectTrans : MonoBehaviour
 {
@@ -11,10 +12,17 @@ public class ObjectTrans : MonoBehaviour
     private ObjectController currentTarget;
     private ObjectController currentControlled;
     private ThirdPersonCamera third;
+
+    [Header("MaskOn")]
+    public GameObject mask;
+    public Transform maskSlot;
+    private FakeFakePlayer fakeplayer;
     // Start is called before the first frame update
     void Start()
     {
         third = Camera.main.GetComponent<ThirdPersonCamera>();
+        third.target = mask.transform;
+        fakeplayer = mask.GetComponent<FakeFakePlayer>();
     }
 
     // Update is called once per frame
@@ -30,13 +38,26 @@ public class ObjectTrans : MonoBehaviour
             }
             currentControlled = currentTarget;
             currentControlled.OnPossessed();
-            
+
+            fakeplayer.isControlled = false;
 
             third.target = currentControlled.transform;
+            maskSlot = currentControlled.transform.Find("MaskSlot");
 
             Debug.Log("∏Ω…Ì≥…π¶: " + currentControlled.name);
 
+            
+
         }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            currentControlled.OnUnPossessed();
+            currentControlled = null;
+            third.target = mask.transform;
+            fakeplayer.isControlled = true;
+        }
+        UpdateMask();
     }
     void DetectObj()
     {
@@ -49,6 +70,15 @@ public class ObjectTrans : MonoBehaviour
         {
             currentTarget = hit.collider.GetComponent<ObjectController>();
         }
+    }
+
+    void UpdateMask()
+    {
+        if (currentControlled == null) return;
+        if (mask == null || maskSlot == null) return;
+
+        mask.transform.position = maskSlot.position;
+        mask.transform.rotation = maskSlot.rotation;
     }
 } 
 

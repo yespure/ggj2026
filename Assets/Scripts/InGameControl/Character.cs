@@ -6,11 +6,11 @@ using UnityEngine;
 public class Character : ObjectController
 {
     public static Action<bool> C_IsPossessing;    // been listened in RagDollController.cs
-    public Animator human_animator;
+    //public Animator human_animator;
 
     void Start()
     {
-        human_animator = GetComponent<Animator>();      
+        //human_animator = GetComponent<Animator>();      
     }
 
     public override void OnPossessed()

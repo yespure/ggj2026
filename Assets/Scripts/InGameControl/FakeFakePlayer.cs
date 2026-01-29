@@ -1,9 +1,10 @@
-using UnityEngine;
-using Mirror;
 using Cinemachine;
-using System;
+using Mirror;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class FakePlayer : NetworkBehaviour
+public class FakeFakePlayer : MonoBehaviour
 {
     [Header("Hover Settings")]
     public float moveSpeed = 10f;
@@ -15,8 +16,8 @@ public class FakePlayer : NetworkBehaviour
     private Transform mainCamTransform;
     private Vector3 currentVelocity;
 
-    public bool isControlled= true;
-    public override void OnStartLocalPlayer()
+    public bool isControlled = true;
+    public void Start()
     {
         freeLookCam = FindObjectOfType<CinemachineFreeLook>();
         mainCamTransform = Camera.main.transform;
@@ -37,13 +38,13 @@ public class FakePlayer : NetworkBehaviour
 
     void Update()
     {
-        if (!isLocalPlayer) return;
 
         HandleMovement();
     }
 
     void HandleMovement()
     {
+        if (!isControlled) return;
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
@@ -73,4 +74,5 @@ public class FakePlayer : NetworkBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotateSpeed);
         }
     }
+
 }
