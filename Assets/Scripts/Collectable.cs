@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Collectable : MonoBehaviour
 {
-    private bool isCollected = false;
+    public bool isCollected = false;
     private Transform carryPoint;
     public ObjectTrans objectTrans;
     // Start is called before the first frame update
