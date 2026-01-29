@@ -10,7 +10,7 @@ public class ObjectTrans : MonoBehaviour
     private float possessRadius = 10f;
     public LayerMask possessLayer;
     private ObjectController currentTarget;
-    private ObjectController currentControlled;
+    public ObjectController currentControlled;
     private ThirdPersonCamera third;
 
     [Header("MaskOn")]
