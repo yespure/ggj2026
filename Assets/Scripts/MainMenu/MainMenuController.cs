@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -16,9 +17,9 @@ public class MainMenuController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //ртоб╝▀цФЁУй╪
+        //О©╫О©╫О©╫б╝О©╫О©╫О©╫О©╫й╪
         settingPanel.SetActive(false);
-        //ртоб╟╢БoЁУй╪
+        //О©╫О©╫О©╫б╟О©╫О©╫oО©╫О©╫й╪
         onlineButton.onClick.AddListener(() => OnOnlineButtonClicked());
         offlineButton.onClick.AddListener(() => OnOfflineButtonClicked());
         settingButton.onClick.AddListener(() => OnSettingButtonClicked());
@@ -30,14 +31,14 @@ public class MainMenuController : MonoBehaviour
     {
         
     }
-    //ртоб╦В╥N╟╢Бo╧╕дэ▄█╛F
+    //О©╫О©╫О©╫б╦О©╫О©╫NО©╫О©╫О©╫oО©╫О©╫О©╫э▄О©╫О©╫F
     void OnOnlineButtonClicked()
     {
-        SceneManager.LoadScene("SampleScene");//╣х╢Щ╦Э╦д
+        SceneManager.LoadScene("SampleScene");//О©╫х╢О©╫О©╫О©╫О©╫О©╫
     }
     void OnOfflineButtonClicked()
     {
-        SceneManager.LoadScene("SampleScene");//╣х╢Щ╦Э╦д
+        SceneManager.LoadScene("SampleScene");//О©╫х╢О©╫О©╫О©╫О©╫О©╫
     }
     void OnSettingButtonClicked()
     {
