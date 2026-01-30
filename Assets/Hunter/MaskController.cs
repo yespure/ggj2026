@@ -12,20 +12,30 @@ public class MaskController : NetworkBehaviour
     // Refs
     private CinemachineFreeLook freeLookCam;
     private Transform mainCamTransform;
+
+    // 【修改点1】组件引用必须在所有端都存在
     private Rigidbody rb;
     private Collider col;
+    private NetworkTransformReliable netTrans;
 
     private ObjectController currentPossessedObject;
 
     public bool IsPossessing => currentPossessedObject != null;
 
-    public override void OnStartLocalPlayer()
+    // 【修改点2】使用 Awake 初始化组件，确保所有客户端（包括非控制者）都有这些引用
+    void Awake()
     {
         col = GetComponent<Collider>();
         rb = GetComponent<Rigidbody>();
-        mainCamTransform = Camera.main.transform;
+        netTrans = GetComponent<NetworkTransformReliable>();
+    }
 
+    // 【修改点3】OnStartLocalPlayer 只处理“只有本地玩家需要做的事”（如相机、输入）
+    public override void OnStartLocalPlayer()
+    {
+        mainCamTransform = Camera.main.transform;
         freeLookCam = FindObjectOfType<CinemachineFreeLook>();
+
         if (freeLookCam != null)
         {
             SetupCamera(transform);
@@ -41,15 +51,11 @@ public class MaskController : NetworkBehaviour
         HandleHoverMovement();
     }
 
-    /// <summary>
-    /// Core movement logic when hovering
-    /// </summary>
     void HandleHoverMovement()
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
-        // Decelerate to stop if no input
         if (Mathf.Abs(h) < 0.01f && Mathf.Abs(v) < 0.01f)
         {
             rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, Time.deltaTime * deceleration);
@@ -64,7 +70,6 @@ public class MaskController : NetworkBehaviour
 
         rb.velocity = Vector3.Lerp(rb.velocity, targetVelocity, Time.deltaTime * 5f);
 
-        // Rotate towards movement direction
         if (rb.velocity.magnitude > 0.1f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
@@ -72,67 +77,96 @@ public class MaskController : NetworkBehaviour
         }
     }
 
-    // --- CORE MECHANICS ---
-
-    /// <summary>
-    /// Possession logic
-    /// 1. attaching to target object
-    /// 2. switching camera
-    /// 3. notifying target object
-    /// </summary>
     public void PossessTarget(ObjectController target)
     {
+        if (!isLocalPlayer) return;
         if (target == null) return;
+
+        NetworkIdentity targetNetID = target.GetComponent<NetworkIdentity>();
+        if (targetNetID != null)
+        {
+            CmdPossess(targetNetID);
+        }
+    }
+
+    public void UnPossessTarget()
+    {
+        if (!isLocalPlayer) return;
+        if (currentPossessedObject == null) return;
+
+        CmdUnPossess();
+    }
+
+    [Command]
+    void CmdPossess(NetworkIdentity targetIdentity)
+    {
+        RpcPossess(targetIdentity);
+    }
+
+    [ClientRpc]
+    void RpcPossess(NetworkIdentity targetIdentity)
+    {
+        if (targetIdentity == null) return;
+        ObjectController target = targetIdentity.GetComponent<ObjectController>();
 
         currentPossessedObject = target;
 
-        // Physical state changes
-        rb.isKinematic = true;
-        rb.velocity = Vector3.zero;
-        col.enabled = false;
+        // 【安全检查】虽然放在Awake里了，多一层检查防止极端情况
+        if (rb)
+        {
+            rb.isKinematic = true;
+            rb.velocity = Vector3.zero;
+        }
+        if (col) col.enabled = false;
 
-        // Visual attachment
+        // 【关键】禁用网络同步
+        if (netTrans) netTrans.enabled = false;
+
         Transform maskSlot = target.transform.Find("MaskSlot");
         transform.SetParent(maskSlot != null ? maskSlot : target.transform);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         transform.localScale = Vector3.one;
 
-        // Camera switch
-        SetupCamera(target.transform);
-
-        // Notify target
-        target.OnPossessed();
-
-        Debug.Log($"[Player] Possessed: {target.name}");
+        if (isLocalPlayer)
+        {
+            SetupCamera(target.transform);
+            target.OnPossessed();
+            Debug.Log($"[Player] Possessed: {target.name}");
+        }
     }
 
-    /// <summary>
-    /// Unpossession logic
-    /// 1. notifying target object
-    /// 2. restoring physical state
-    /// 3. switching camera back
-    /// </summary>
-    public void UnPossessTarget()
+    [Command]
+    void CmdUnPossess()
     {
-        if (currentPossessedObject == null) return;
+        RpcUnPossess();
+    }
 
-        // notify target object
-        currentPossessedObject.OnUnPossessed();
+    [ClientRpc]
+    void RpcUnPossess()
+    {
+        Vector3 exitPos = transform.position;
+        if (currentPossessedObject != null) exitPos = currentPossessedObject.transform.position + Vector3.up * 1.5f;
+
+        if (isLocalPlayer && currentPossessedObject != null)
+        {
+            currentPossessedObject.OnUnPossessed();
+            SetupCamera(transform);
+        }
+
         currentPossessedObject = null;
 
-        // restore physical state and detach
-        rb.isKinematic = false;
-        col.enabled = true;
         transform.SetParent(null);
+        transform.position = exitPos;
         transform.localScale = Vector3.one;
 
-        // switch camera back
-        SetupCamera(transform);
+        if (rb) rb.isKinematic = false;
+        if (col) col.enabled = true;
 
-        // transform.position += Vector3.up * 1.5f;
+        // 【关键】重新启用网络同步
+        if (netTrans) netTrans.enabled = true;
 
-        Debug.Log("[FakePlayer] UnPossessed");
+        Debug.Log("[Player] UnPossessed");
     }
 
     private void SetupCamera(Transform target)
