@@ -8,43 +8,56 @@ using DG.Tweening;
 
 public class MainMenuController : MonoBehaviour
 {
-    public Button onlineButton;
+    public Button logginButton;
     public Button offlineButton;
     public Button settingButton;
     public Button quitButton;
-
+    
     public GameObject settingPanel;
-    // Start is called before the first frame update
+
+    // Parameters
+    public float buttonSpeed = 0.5f;
+    public float titleSpeed = 1f;
+    bool panelIsOut = false;
+
+
+    
+
     void Start()
     {
-        //���®����ʼ
-        settingPanel.SetActive(false);
-        //���°��o��ʼ
-        onlineButton.onClick.AddListener(() => OnOnlineButtonClicked());
-        offlineButton.onClick.AddListener(() => OnOfflineButtonClicked());
-        settingButton.onClick.AddListener(() => OnSettingButtonClicked());
-        quitButton.onClick.AddListener(() => OnQuitButtonClicked());
+        //This is Setting Panel
+
+        //This is Buttons in main menu, hide when setting panel is active
+        // logginButton.onClick.AddListener(() => OnLogginButtonClicked());
+        // offlineButton.onClick.AddListener(() => OnOfflineButtonClicked());
+        // settingButton.onClick.AddListener(() => OnSettingButtonClicked());
+        // quitButton.onClick.AddListener(() => OnQuitButtonClicked());
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            settingPanel.SetActive(false);
+        }
     }
     //���¸��N���o���܌��F
-    void OnOnlineButtonClicked()
+    public void OnLogginButtonClicked()
+    {
+        SceneManager.LoadScene("SampleScene");// Lobby? Else?
+    }
+    public void OnOfflineButtonClicked()
     {
         SceneManager.LoadScene("SampleScene");//�ȴ�����
     }
-    void OnOfflineButtonClicked()
+    public void OnSettingButtonClicked()
     {
-        SceneManager.LoadScene("SampleScene");//�ȴ�����
+        panelIsOut = !panelIsOut;
+        settingPanel.transform.DOMove(new Vector3(0, panelIsOut ? 1440 : 0, 0), 1);
     }
-    void OnSettingButtonClicked()
-    {
-        settingPanel.SetActive(true);
-    }
-    void OnQuitButtonClicked()
+    public void OnQuitButtonClicked()
     {
         Application.Quit();
     }

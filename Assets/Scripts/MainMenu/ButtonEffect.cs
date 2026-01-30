@@ -10,20 +10,20 @@ public class ButtonEffect : MonoBehaviour,
     IPointerExitHandler,
     IPointerClickHandler
 {
-    [Header("°´âo·Å´ó")]
+    [Header("ï¿½ï¿½ï¿½oï¿½Å´ï¿½")]
     public float hoverScale = 1.1f;
     public float scaleSpeed = 10f;
     private Vector3 originalScale;
     private bool isHovering = false;
 
-    [Header("ïh¸¡Ð§¹û")]
-    public float floatAmplitude = 5f; // Æ¯¸¡·ù¶È
-    public float floatFrequency = 1f; // Æ¯¸¡ËÙ¶È
+    [Header("ï¿½hï¿½ï¿½Ð§ï¿½ï¿½")]
+    public float floatAmplitude = 5f; // Æ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public float floatFrequency = 1f; // Æ¯ï¿½ï¿½ï¿½Ù¶ï¿½
 
     private Vector3 originalPosition;
     private float floatTimer = 0f;
 
-    [Header("°´âoÂ•Òô")]
+    [Header("ï¿½ï¿½ï¿½oÂ•ï¿½ï¿½")]
     private AudioSource audioSource;
     public AudioClip clickSound;
     public AudioClip HoverSound;
@@ -46,24 +46,24 @@ public class ButtonEffect : MonoBehaviour,
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //Êó˜ËßMÈë
+        //ï¿½ï¿½ï¿½ï¿½Mï¿½ï¿½
         isHovering = true;
-        audioSource.PlayOneShot(HoverSound);
+        // audioSource.PlayOneShot(HoverSound);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //Êó˜ËÍË³ö
+        //ï¿½ï¿½ï¿½ï¿½Ë³ï¿½
         isHovering = false;
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        //Êó˜Ëüc“ô
-        audioSource.PlayOneShot(clickSound);
+        //ï¿½ï¿½ï¿½ï¿½cï¿½ï¿½
+        // audioSource.PlayOneShot(clickSound);
     }
     public void ButtonHover()
     {
-        //°´âo·Å´ó»ù±¾ß‰Ý‹
+        //ï¿½ï¿½ï¿½oï¿½Å´ï¿½ï¿½ï¿½ï¿½ß‰Ý‹
         Vector3 targetScale = isHovering
           ? originalScale * hoverScale
           : originalScale;
@@ -76,7 +76,7 @@ public class ButtonEffect : MonoBehaviour,
     }
     public void ButtonFloat()
     {
-        //  Æ®¸¡Ð§¹û
+        //  Æ®ï¿½ï¿½Ð§ï¿½ï¿½
         if (isHovering)
         {
             floatTimer += Time.deltaTime * floatFrequency;
