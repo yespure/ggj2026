@@ -17,9 +17,12 @@ public class MainMenuController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //ï¿½ï¿½ï¿½Â®ï¿½ï¿½ï¿½ï¿½Ê¼
+        //ï¿½ï¿½ï¿½Â®ï¿½ï¿½ï¿½ï¿½Ê?
         settingPanel.SetActive(false);
         //ï¿½ï¿½ï¿½Â°ï¿½ï¿½oï¿½ï¿½Ê¼
+        //ÒÔÏÂ®‹Ãæ³õÊ¼
+        settingPanel.SetActive(false);
+        //ÒÔÏÂ°´âo³õÊ¼
         onlineButton.onClick.AddListener(() => OnOnlineButtonClicked());
         offlineButton.onClick.AddListener(() => OnOfflineButtonClicked());
         settingButton.onClick.AddListener(() => OnSettingButtonClicked());
@@ -29,7 +32,10 @@ public class MainMenuController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            settingPanel.SetActive(false);
+        }
     }
     //ï¿½ï¿½ï¿½Â¸ï¿½ï¿½Nï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ÜŒï¿½ï¿½F
     void OnOnlineButtonClicked()
