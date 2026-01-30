@@ -13,10 +13,10 @@ GameObject:
   - component: {fileID: 576130041889701439}
   - component: {fileID: 7189428822266986919}
   - component: {fileID: 4225417816993985935}
-  - component: {fileID: 7252765640491366235}
-  - component: {fileID: 7268885209951717485}
   - component: {fileID: -8139834798311741943}
   - component: {fileID: -6759008279415878556}
+  - component: {fileID: 7268885209951717485}
+  - component: {fileID: 7252765640491366235}
   - component: {fileID: 565524356905946775}
   m_Layer: 4
   m_Name: Player
@@ -139,44 +139,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &7252765640491366235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5987183212708616389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b88b6bb4a1c397149ba66007b0dd6a79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMethod: 0
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  moveSpeed: 5
-  rotateSpeed: 10
-  deceleration: 10
-  isTakeoverControl: 0
---- !u!114 &7268885209951717485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5987183212708616389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25fee40eb11d58947890aa631cf8ae1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  linePrefab: {fileID: 4444902641700131825, guid: 4788fb55608b7f246879cc2513a02ca1,
-    type: 3}
-  boardLayer:
-    serializedVersion: 2
-    m_Bits: 16
-  minDistance: 0.01
 --- !u!114 &-8139834798311741943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +191,43 @@ MonoBehaviour:
   rotationSensitivity: 0.01
   positionPrecision: 0.01
   scalePrecision: 0.01
+--- !u!114 &7268885209951717485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5987183212708616389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fee40eb11d58947890aa631cf8ae1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linePrefab: {fileID: 4444902641700131825, guid: 4788fb55608b7f246879cc2513a02ca1,
+    type: 3}
+  boardLayer:
+    serializedVersion: 2
+    m_Bits: 16
+  minDistance: 0.01
+--- !u!114 &7252765640491366235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5987183212708616389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b88b6bb4a1c397149ba66007b0dd6a79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  moveSpeed: 5
+  rotateSpeed: 10
+  deceleration: 10
 --- !u!114 &565524356905946775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,26 +240,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9abb0acb8e199a489107561a2fd84e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  possessRadius: 10
   possessLayer:
     serializedVersion: 2
     m_Bits: 64
-  currentTarget: {fileID: 0}
-  currentControlled: {fileID: 0}
-  OnPossessed:
+  hoveredTarget: {fileID: 0}
+  OnPossessAction:
     m_PersistentCalls:
       m_Calls: []
-  OnUnPossessed:
+  OnUnPossessAction:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7252765640491366235}
-        m_TargetAssemblyTypeName: FakePlayer, Assembly-CSharp
-        m_MethodName: ReleaseControl
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
