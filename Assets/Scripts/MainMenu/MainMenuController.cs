@@ -55,8 +55,8 @@ public class MainMenuController : MonoBehaviour
     public void OnSettingButtonClicked()
     {
         panelIsOut = !panelIsOut;
-        settingPanel.transform.DOMove(new Vector3(0, panelIsOut ? 1440 : 0, 0), 1);
-    }
+        settingPanel.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, panelIsOut ? 0 : 2000), 1).SetEase(Ease.OutBack);
+    }   
     public void OnQuitButtonClicked()
     {
         Application.Quit();
