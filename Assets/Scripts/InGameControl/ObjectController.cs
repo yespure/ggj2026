@@ -9,7 +9,7 @@ public class ObjectController : NetworkBehaviour
     public float jumpForce = 5f;
 
     [Header("State")]
-    public bool isControlled = false;
+    [SyncVar] public bool isControlled = false;
     protected Rigidbody rb;
     protected bool isGrounded = true;
 

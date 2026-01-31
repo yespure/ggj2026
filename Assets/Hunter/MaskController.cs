@@ -80,6 +80,8 @@ public class MaskController : NetworkBehaviour
         if (!isLocalPlayer) return;
         if (target == null) return;
 
+        if (target.isControlled) return; // 已被控制，不能附身
+
         NetworkIdentity targetNetID = target.GetComponent<NetworkIdentity>();
         if (targetNetID != null)
         {
@@ -98,6 +100,12 @@ public class MaskController : NetworkBehaviour
     [Command]
     void CmdPossess(NetworkIdentity targetIdentity)
     {
+        ObjectController target = targetIdentity.GetComponent<ObjectController>();
+        if (target.isControlled) return; // 已被控制，不能附身
+        if (targetIdentity.connectionToClient != null) return; // 已被其他客户端控制，不能附身
+
+        target.isControlled = true;
+
         //try
         //{
         //    targetIdentity.AssignClientAuthority(connectionToClient);
@@ -172,6 +180,12 @@ public class MaskController : NetworkBehaviour
 
         // 【关键】收回权限
         targetIdentity.RemoveClientAuthority();
+
+        ObjectController target = targetIdentity.GetComponent<ObjectController>();
+        if (target != null)
+        {
+            target.isControlled = false;
+        }
     }
 
     [ClientRpc]
