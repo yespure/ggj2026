@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using Sequence = DG.Tweening.Sequence;
+using Cinemachine;
+using UnityEngine.Audio;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -20,6 +22,10 @@ public class MainMenuController : MonoBehaviour
     public GameObject settingPanel;
     private bool settingPanelIsOut = false;
     [Space]
+    public AudioMixer audioMixer;
+    public string[] volParameter = { "BGMVol", "SFXVol", "MasterVol" };
+    public Slider[] volSliders = new Slider[3]; // 0 - BGM, 1 - SFX, 2 - Master
+    [Space]
     
     [Header("Join Game Panel")]
     public GameObject joinGamePanel;
@@ -30,31 +36,31 @@ public class MainMenuController : MonoBehaviour
 
     // Parameters
     public float yOffset = 100f;
-    public float titleSpeed = 1f;
-
-
-
+    private float initialXSpeed;
+    private float initialYSpeed;
     
+
+
+
+    void Awake()
+    {    
+        // 记录你在 Inspector 面板中预设的初始速度
+        // initialXSpeed = freeLookCam.m_XAxis.m_MaxSpeed;
+        // initialYSpeed = freeLookCam.m_YAxis.m_MaxSpeed;
+    }
 
     void Start()
     {
-        //This is Setting Panel
-
-        //This is Buttons in main menu, hide when setting panel is active
-        // logginButton.onClick.AddListener(() => OnLogginButtonClicked());
-        // offlineButton.onClick.AddListener(() => OnOfflineButtonClicked());
-        // settingButton.onClick.AddListener(() => OnSettingButtonClicked());
-        // quitButton.onClick.AddListener(() => OnQuitButtonClicked());
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            settingPanel.SetActive(false);
-        }
+        // if (Input.GetKeyDown(KeyCode.Escape))
+        // {
+        //     settingPanel.SetActive(false);
+        // }
     }
 
     public void OnSettingButtonClicked()
@@ -65,7 +71,7 @@ public class MainMenuController : MonoBehaviour
 
     public void OnLogginButtonClicked()
     {
-        // Hide main menu buttons
+        // Hide main menu buttons, one by one
         Sequence animatedUI_HideMain = DOTween.Sequence();
         for (int i = 0; i < mainMenuButtons.Length; i++)
         {
@@ -79,7 +85,7 @@ public class MainMenuController : MonoBehaviour
         }
         animatedUI_HideMain.Play();
 
-        // Switch UI group to online menu
+        // Switch UI group to online menu, one by one
         Sequence animatedUI_showOnline = DOTween.Sequence();
         for (int i = 0; i < onlineButtons.Length; i++)
         {
@@ -93,6 +99,9 @@ public class MainMenuController : MonoBehaviour
             // animatedUI_showOnline.AppendInterval(-0.1f); // 这样下一个按钮会提前xx秒开始动
         }
         animatedUI_showOnline.Play();
+
+        settingPanelIsOut = false;
+        settingPanel.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, settingPanelIsOut ? 0 : 2000), 0.6f).SetEase(Ease.OutBack);
 
 
         // Debug.Log("Loggin Button Clicked");
@@ -118,7 +127,7 @@ public class MainMenuController : MonoBehaviour
 
     public void OnBackButtonClicked()
     {
-        // Hide online buttons
+        // Hide online buttons, one by one
         Sequence animatedUI_HideOnline = DOTween.Sequence();
         for (int i = 0; i < onlineButtons.Length; i++)
         {
@@ -131,7 +140,7 @@ public class MainMenuController : MonoBehaviour
         }
         animatedUI_HideOnline.Play();
 
-        // Switch UI group to main menu
+        // Switch UI group to main menu, one by one
         Sequence animatedUI_ShowMain = DOTween.Sequence();
         for (int i = 0; i < mainMenuButtons.Length; i++)
         {
@@ -144,6 +153,8 @@ public class MainMenuController : MonoBehaviour
         }
         animatedUI_ShowMain.Play();
 
+        joinGamePanelIsOut = false;
+        joinGamePanel.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, joinGamePanelIsOut ? 0 : 2000), 0.6f).SetEase(Ease.OutBack);
 
 
         // Debug.Log("Exit Lobby Button Clicked");
@@ -154,6 +165,30 @@ public class MainMenuController : MonoBehaviour
         // Exit the game
         Application.Quit();
     }
+
+    public void UpdateBGM(float value)
+    {
+        float dB = Mathf.Log10(Mathf.Max(0.0001f, value)) * 20;
+        
+        audioMixer.SetFloat(volParameter[0], dB);
+    }
+
+    public void UpdateSFX(float value)
+    {
+        float dB = Mathf.Log10(Mathf.Max(0.0001f, value)) * 20;
+        
+        audioMixer.SetFloat(volParameter[1], dB);
+    }
+
+    public void UpdateMaster(float value)
+    {
+        float dB = Mathf.Log10(Mathf.Max(0.0001f, value)) * 20;
+        
+        audioMixer.SetFloat(volParameter[2], dB);
+    }
+
+
+
 
 
 
