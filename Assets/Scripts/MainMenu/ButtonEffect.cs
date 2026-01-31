@@ -6,27 +6,27 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class ButtonEffect : MonoBehaviour, 
+
+    // Change your fucking language to Mandarin.
+
     IPointerEnterHandler,
     IPointerExitHandler,
     IPointerClickHandler
 {
-    [Header("���o�Ŵ�")]
+    [Header("按钮缩放")]
     public float hoverScale = 1.1f;
     public float scaleSpeed = 10f;
     private Vector3 originalScale;
     private bool isHovering = false;
 
-    [Header("�h��Ч��")]
-    public float floatAmplitude = 5f; // Ư������
-    public float floatFrequency = 1f; // Ư���ٶ�
+    [Header("按钮浮动效果")]
+    public float floatAmplitude = 5f; 
+    public float floatFrequency = 1f;
 
     private Vector3 originalPosition;
     private float floatTimer = 0f;
 
-    [Header("���o��")]
-    private AudioSource audioSource;
-    public AudioClip clickSound;
-    public AudioClip HoverSound;
+    
 
 
     private void Awake()
@@ -46,24 +46,24 @@ public class ButtonEffect : MonoBehaviour,
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //����M��
+        
         isHovering = true;
-        // audioSource.PlayOneShot(HoverSound);
+        AudioManager.Instance.PlayHover();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //����˳�
+        
         isHovering = false;
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        //����c��
-        // audioSource.PlayOneShot(clickSound);
+        
+        AudioManager.Instance.PlayClick();
     }
     public void ButtonHover()
     {
-        //���o�Ŵ����߉݋
+        
         Vector3 targetScale = isHovering
           ? originalScale * hoverScale
           : originalScale;
@@ -85,12 +85,12 @@ public class ButtonEffect : MonoBehaviour,
             float xOffset = Mathf.Sin(floatTimer * 2f) * floatAmplitude;
             float yOffset = Mathf.Cos(floatTimer * 3f) * floatAmplitude;
 
-            transform.localPosition = originalPosition + new Vector3(xOffset, yOffset, 0f);
+            // transform.localPosition = originalPosition + new Vector3(xOffset, yOffset, 0f);
         }
         else
         {
             floatTimer = 0f;
-            transform.localPosition = Vector3.Lerp(transform.localPosition, originalPosition, Time.deltaTime * scaleSpeed);
+            // transform.localPosition = Vector3.Lerp(transform.localPosition, originalPosition, Time.deltaTime * scaleSpeed);
         }
     }
 }
