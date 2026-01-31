@@ -8,6 +8,10 @@ public class ObjectController : NetworkBehaviour
     public float moveSpeed = 5.0f;
     public float jumpForce = 5f;
 
+    [Header("Impact Settings")]
+    public float ejectThreshold = 10f;
+    public MaskController currentPossessorMask;
+
     [Header("State")]
     [SyncVar] public bool isControlled = false;
     protected Rigidbody rb;

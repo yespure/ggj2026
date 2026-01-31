@@ -10,6 +10,7 @@ public class PossessionAbility : MonoBehaviour
 
     [Header("Debug")]
     public ObjectController hoveredTarget;
+    private ObjectController previousHoveredTarget;
 
     [Header("Events")]
     public UnityEvent OnPossessAction;
@@ -27,8 +28,10 @@ public class PossessionAbility : MonoBehaviour
     {
         if (!playerBrain.isLocalPlayer) return;
 
-        DetectObj();
+        //DetectObj();
+        FindNearestTarget();
         HandleInput();
+        HandleHighlight();
     }
 
     void HandleInput()
@@ -44,6 +47,26 @@ public class PossessionAbility : MonoBehaviour
         {
             playerBrain.UnPossessTarget();
             OnUnPossessAction?.Invoke();
+        }
+    }
+
+    void HandleHighlight()
+    {
+        if (hoveredTarget != previousHoveredTarget)
+        {
+            if (previousHoveredTarget != null)
+            {
+                var outline = previousHoveredTarget.GetComponent<Outline>();
+                if (outline != null) outline.enabled = false;
+            }
+
+            if (hoveredTarget != null)
+            {
+                var outline = hoveredTarget.GetComponent<Outline>();
+                if (outline != null) outline.enabled = true;
+            }
+
+            previousHoveredTarget = hoveredTarget;
         }
     }
 
@@ -65,5 +88,37 @@ public class PossessionAbility : MonoBehaviour
         {
             hoveredTarget = hit.collider.GetComponent<ObjectController>();
         }
+    }
+
+    void FindNearestTarget()
+    {
+        if (playerBrain.IsPossessing)
+        {
+            hoveredTarget = null;
+            return;
+        }
+
+        Collider[] hits = Physics.OverlapSphere(transform.position, possessRadius, possessLayer);
+        
+        float nearestDistance = Mathf.Infinity;
+        ObjectController nearestTarget = null;
+
+        foreach (Collider hit in hits)
+        {
+            float distance = Vector3.Distance(transform.position, hit.transform.position);
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearestTarget = hit.GetComponent<ObjectController>();
+            }
+        }
+
+        hoveredTarget = nearestTarget;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, possessRadius);
     }
 }

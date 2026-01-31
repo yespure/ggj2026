@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 2737196544902928384}
   - component: {fileID: 493746161304652275}
   - component: {fileID: 5674577840518077367}
+  - component: {fileID: 3305472598647188021}
   m_Layer: 6
   m_Name: Possessable Ball
   m_TagString: Untagged
@@ -186,6 +187,8 @@ MonoBehaviour:
   syncInterval: 0
   moveSpeed: 5
   jumpForce: 5
+  ejectThreshold: 10
+  currentPossessorMask: {fileID: 0}
   isControlled: 0
 --- !u!114 &493746161304652275
 MonoBehaviour:
@@ -239,3 +242,21 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
+--- !u!114 &3305472598647188021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9124493319060857244}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
