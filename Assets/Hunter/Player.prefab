@@ -225,7 +225,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  moveSpeed: 10
+  moveSpeed: 5
   rotateSpeed: 10
   deceleration: 10
 --- !u!114 &565524356905946775
@@ -240,7 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9abb0acb8e199a489107561a2fd84e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possessRadius: 10
+  possessRadius: 5
   possessLayer:
     serializedVersion: 2
     m_Bits: 64
