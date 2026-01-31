@@ -1,105 +1,77 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class ObjectController : MonoBehaviour
+// 1. 必须改为继承 NetworkBehaviour
+public class ObjectController : NetworkBehaviour
 {
-    [Header("移動")]
-    public float moveSpeed = 1.0f;
-    public float turnSpeed = 40f;
-
-    [Header("跳跃")]
+    [Header("Stats")]
+    public float moveSpeed = 5.0f;
     public float jumpForce = 5f;
-    public bool isGrounded = true;
-    protected  Rigidbody rb;
 
-    [Header("Controljudgement")]
+    [Header("State")]
     public bool isControlled = false;
-    // Start is called before the first frame update
-    void Awake()
+    protected Rigidbody rb;
+    protected bool isGrounded = true;
+
+    protected float inputH;
+    protected float inputV;
+    protected bool jumpInput;
+
+    protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        
     }
 
-    // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if (!isControlled) return;
-        Move();
-        Jump();
+
+        // 2. 【关键】客机是否有控制权
+        if (!isOwned) return;
+
+        inputH = Input.GetAxis("Horizontal");
+        inputV = Input.GetAxis("Vertical");
+        if (Input.GetKeyDown(KeyCode.Space)) jumpInput = true;
+
         Specialability();
     }
-    //以下本地坐標移動
+
+    protected virtual void FixedUpdate()
+    {
+        if (!isControlled) return;
+
+        // 3. 【关键】同上
+        if (!isOwned) return;
+
+        Move();
+        Jump();
+    }
+
     protected virtual void Move()
     {
-
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        {
-            //轉向邏輯
-            Quaternion targetRotation = Quaternion.Euler(
-                0f,
-                horizontal * turnSpeed * Time.fixedDeltaTime,
-                0f
-                );
-            rb.MoveRotation(rb.rotation * targetRotation);
-            //移動邏輯
-            Vector3 move = transform.forward * vertical * moveSpeed * Time.fixedDeltaTime;
-            rb.MovePosition(rb.position + move);
-        }
+        // 基类留空
     }
-    //以下世界坐標移動
-    /*
-    private void Move()
-    {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        Vector3 inputDir = new Vector3(horizontal, 0f, vertical);
-
-        if (inputDir.magnitude > 0.1f)
-        {
-            // 转向
-            Quaternion targetRotation = Quaternion.LookRotation(inputDir);
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                targetRotation,
-                Time.deltaTime * turnSpeed
-            );
-
-            // 用输入方向移动（关键！）
-            rb.MovePosition(
-                rb.position + inputDir.normalized * moveSpeed * Time.deltaTime
-            );
-        }
-    }
-    */
 
     protected virtual void Jump()
     {
-        //跳躍邏輯(Rigidbody)
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (jumpInput && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
         }
+        jumpInput = false;
     }
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        //地面檢測
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
         }
     }
 
-    protected virtual void Specialability()
-    {
+    protected virtual void Specialability() { }
 
-    }
     public virtual void OnPossessed()
     {
         isControlled = true;
@@ -108,6 +80,7 @@ public class ObjectController : MonoBehaviour
     public virtual void OnUnPossessed()
     {
         isControlled = false;
+        inputH = 0;
+        inputV = 0;
     }
-
 }

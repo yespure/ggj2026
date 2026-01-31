@@ -12,25 +12,21 @@ public class MaskController : NetworkBehaviour
     // Refs
     private CinemachineFreeLook freeLookCam;
     private Transform mainCamTransform;
-
-    // 【修改点1】组件引用必须在所有端都存在
     private Rigidbody rb;
     private Collider col;
-    private NetworkTransformReliable netTrans;
+    private NetworkTransformReliable netTrans; // Important
 
     private ObjectController currentPossessedObject;
-
     public bool IsPossessing => currentPossessedObject != null;
 
-    // 【修改点2】使用 Awake 初始化组件，确保所有客户端（包括非控制者）都有这些引用
     void Awake()
     {
+        // 在 Awake 获取组件，确保所有客户端（包括非LocalPlayer）都能初始化引用
         col = GetComponent<Collider>();
         rb = GetComponent<Rigidbody>();
         netTrans = GetComponent<NetworkTransformReliable>();
     }
 
-    // 【修改点3】OnStartLocalPlayer 只处理“只有本地玩家需要做的事”（如相机、输入）
     public override void OnStartLocalPlayer()
     {
         mainCamTransform = Camera.main.transform;
@@ -77,6 +73,8 @@ public class MaskController : NetworkBehaviour
         }
     }
 
+    // --- 附身与解除逻辑 ---
+
     public void PossessTarget(ObjectController target)
     {
         if (!isLocalPlayer) return;
@@ -100,6 +98,17 @@ public class MaskController : NetworkBehaviour
     [Command]
     void CmdPossess(NetworkIdentity targetIdentity)
     {
+        //try
+        //{
+        //    targetIdentity.AssignClientAuthority(connectionToClient);
+        //}
+        //catch (System.Exception e)
+        //{
+        //    Debug.LogWarning($"Assign Authority warning: {e.Message}");
+        //}
+
+        // 【关键】将物体的控制权（Authority）移交给请求附身的客户端
+        targetIdentity.AssignClientAuthority(connectionToClient);
         RpcPossess(targetIdentity);
     }
 
@@ -111,7 +120,7 @@ public class MaskController : NetworkBehaviour
 
         currentPossessedObject = target;
 
-        // 【安全检查】虽然放在Awake里了，多一层检查防止极端情况
+        // 1. 关闭面具物理
         if (rb)
         {
             rb.isKinematic = true;
@@ -119,19 +128,21 @@ public class MaskController : NetworkBehaviour
         }
         if (col) col.enabled = false;
 
-        // 【关键】禁用网络同步
+        // 2. 【关键】关闭面具的网络同步，防止位置冲突
         if (netTrans) netTrans.enabled = false;
 
+        // 3. 绑定父子级
         Transform maskSlot = target.transform.Find("MaskSlot");
         transform.SetParent(maskSlot != null ? maskSlot : target.transform);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         transform.localScale = Vector3.one;
 
+        // 4. 本地玩家操作
         if (isLocalPlayer)
         {
             SetupCamera(target.transform);
-            target.OnPossessed();
+            target.OnPossessed(); // 开启输入
             Debug.Log($"[Player] Possessed: {target.name}");
         }
     }
@@ -139,15 +150,39 @@ public class MaskController : NetworkBehaviour
     [Command]
     void CmdUnPossess()
     {
+        // 在解除前获取 NetworkIdentity，因为解除后引用可能丢失
+        NetworkIdentity targetIdentity = null;
+        if (currentPossessedObject != null)
+            targetIdentity = currentPossessedObject.GetComponent<NetworkIdentity>();
+
         RpcUnPossess();
+
+
+        //if (targetIdentity != null)
+        //{
+        //    try
+        //    {
+        //        targetIdentity.RemoveClientAuthority();
+        //    }
+        //    catch (System.Exception e)
+        //    {
+        //        Debug.LogWarning($"Remove Authority warning: {e.Message}");
+        //    }
+        //}
+
+        // 【关键】收回权限
+        targetIdentity.RemoveClientAuthority();
     }
 
     [ClientRpc]
     void RpcUnPossess()
     {
+        // 计算退出位置（向上弹起）
         Vector3 exitPos = transform.position;
-        if (currentPossessedObject != null) exitPos = currentPossessedObject.transform.position + Vector3.up * 1.5f;
+        if (currentPossessedObject != null)
+            exitPos = currentPossessedObject.transform.position + Vector3.up * 2f;
 
+        // 本地玩家清理操作
         if (isLocalPlayer && currentPossessedObject != null)
         {
             currentPossessedObject.OnUnPossessed();
@@ -156,14 +191,16 @@ public class MaskController : NetworkBehaviour
 
         currentPossessedObject = null;
 
+        // 1. 解除父子级
         transform.SetParent(null);
         transform.position = exitPos;
         transform.localScale = Vector3.one;
 
+        // 2. 恢复物理
         if (rb) rb.isKinematic = false;
         if (col) col.enabled = true;
 
-        // 【关键】重新启用网络同步
+        // 3. 【关键】恢复网络同步
         if (netTrans) netTrans.enabled = true;
 
         Debug.Log("[Player] UnPossessed");

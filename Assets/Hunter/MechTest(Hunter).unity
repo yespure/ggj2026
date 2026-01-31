@@ -453,7 +453,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &263450341
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -583,10 +583,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d1350dc63d5dfe4b9e7e0e89698ca8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   moveSpeed: 1
-  turnSpeed: 40
   jumpForce: 5
-  isGrounded: 1
   isControlled: 0
 --- !u!1 &281630741
 GameObject:
@@ -1796,55 +1798,6 @@ Transform:
   - {fileID: 212406138}
   m_Father: {fileID: 1334768874}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1649526286
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1649526288}
-  - component: {fileID: 1649526287}
-  m_Layer: 0
-  m_Name: ObjectController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1649526287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1649526286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4075472aade6ce41933b692940af80b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 1
-  turnSpeed: 40
-  jumpForce: 5
-  isGrounded: 1
-  isControlled: 0
---- !u!4 &1649526288
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1649526286}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.0750849, y: 1.4773669, z: -7.242514}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1791210006
 GameObject:
   m_ObjectHideFlags: 0
@@ -1865,7 +1818,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1791210008
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1993,10 +1946,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 780d02e7bbd84314d96c13a05e82fe04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   moveSpeed: 1
-  turnSpeed: 40
   jumpForce: 5
-  isGrounded: 1
   isControlled: 0
 --- !u!1 &1972231966
 GameObject:
@@ -2327,7 +2282,6 @@ SceneRoots:
   - {fileID: 263450344}
   - {fileID: 1791210011}
   - {fileID: 281630745}
-  - {fileID: 1649526288}
   - {fileID: 999110198}
   - {fileID: 1355761095518778320}
   - {fileID: 475842636}
