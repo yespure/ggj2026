@@ -1,6 +1,8 @@
 using UnityEngine;
 using Mirror;
 using Cinemachine;
+using System.Collections;
+
 
 public class MaskController : NetworkBehaviour
 {
@@ -18,6 +20,10 @@ public class MaskController : NetworkBehaviour
 
     private ObjectController currentPossessedObject;
     public bool IsPossessing => currentPossessedObject != null;
+    // 眩晕状态
+    [Header("Stun Settings")]
+    public float stunDuration = 1.5f; // 眩晕时长
+    public bool IsStunned { get; private set; } = false;
 
     void Awake()
     {
@@ -43,6 +49,7 @@ public class MaskController : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
         if (IsPossessing) return;
+        if (IsStunned) return;
 
         HandleHoverMovement();
     }
@@ -94,7 +101,7 @@ public class MaskController : NetworkBehaviour
         if (!isLocalPlayer) return;
         if (currentPossessedObject == null) return;
 
-        CmdUnPossess();
+        CmdUnPossess(Vector3.zero);
     }
 
     [Command]
@@ -128,6 +135,10 @@ public class MaskController : NetworkBehaviour
 
         currentPossessedObject = target;
 
+        // 【新增】建立双向引用：让球知道是谁附身了它
+        // 这样球在检测到碰撞时，能找到这个 MaskController
+        target.currentPossessorMask = this;
+
         // 1. 关闭面具物理
         if (rb)
         {
@@ -156,14 +167,14 @@ public class MaskController : NetworkBehaviour
     }
 
     [Command]
-    void CmdUnPossess()
+    void CmdUnPossess(Vector3 ejectForce)
     {
         // 在解除前获取 NetworkIdentity，因为解除后引用可能丢失
         NetworkIdentity targetIdentity = null;
         if (currentPossessedObject != null)
             targetIdentity = currentPossessedObject.GetComponent<NetworkIdentity>();
 
-        RpcUnPossess();
+        RpcUnPossess(ejectForce);
 
 
         //if (targetIdentity != null)
@@ -189,12 +200,18 @@ public class MaskController : NetworkBehaviour
     }
 
     [ClientRpc]
-    void RpcUnPossess()
+    void RpcUnPossess(Vector3 ejectForce)
     {
         // 计算退出位置（向上弹起）
         Vector3 exitPos = transform.position;
         if (currentPossessedObject != null)
+        {
             exitPos = currentPossessedObject.transform.position + Vector3.up * 2f;
+
+            // 【新增】清理引用
+            // 解除附身时，球不再属于我
+            currentPossessedObject.currentPossessorMask = null;
+        }
 
         // 本地玩家清理操作
         if (isLocalPlayer && currentPossessedObject != null)
@@ -211,7 +228,14 @@ public class MaskController : NetworkBehaviour
         transform.localScale = Vector3.one;
 
         // 2. 恢复物理
-        if (rb) rb.isKinematic = false;
+        if (rb)
+        {
+            rb.isKinematic = false;
+            if (ejectForce != Vector3.zero)
+            {
+                rb.AddForce(ejectForce, ForceMode.Impulse);
+            }
+        }
         if (col) col.enabled = true;
 
         // 3. 【关键】恢复网络同步
@@ -227,5 +251,27 @@ public class MaskController : NetworkBehaviour
             freeLookCam.Follow = target;
             freeLookCam.LookAt = target;
         }
+    }
+
+    public void ForceEject(Vector3 ejectForce)
+    {
+        if (!isLocalPlayer) return;
+        StartCoroutine(StunRoutine());
+        CmdUnPossess(ejectForce);
+    }
+
+    IEnumerator StunRoutine()
+    {
+        IsStunned = true;
+        rb.useGravity = true;
+        rb.constraints = RigidbodyConstraints.None;
+        Debug.Log("Player Stunned!");
+
+        yield return new WaitForSeconds(stunDuration);
+
+        IsStunned = false;
+        rb.useGravity = false;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        Debug.Log("Player Recovered!");
     }
 }

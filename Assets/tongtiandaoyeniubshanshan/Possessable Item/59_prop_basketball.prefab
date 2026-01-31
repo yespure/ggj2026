@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: -2262127433603086037}
   m_Layer: 6
   m_Name: 59_prop_basketball
-  m_TagString: Respawn
+  m_TagString: Possessable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 65
