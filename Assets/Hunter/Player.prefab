@@ -225,7 +225,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  moveSpeed: 5
+  moveSpeed: 10
   rotateSpeed: 10
   deceleration: 10
 --- !u!114 &565524356905946775

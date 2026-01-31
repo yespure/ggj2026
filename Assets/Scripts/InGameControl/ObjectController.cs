@@ -9,7 +9,7 @@ public class ObjectController : NetworkBehaviour
     public float jumpForce = 5f;
 
     [Header("State")]
-    public bool isControlled = false;
+    [SyncVar] public bool isControlled = false;
     protected Rigidbody rb;
     protected bool isGrounded = true;
 
@@ -64,10 +64,11 @@ public class ObjectController : NetworkBehaviour
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
+        //if (collision.gameObject.CompareTag("Ground"))
+        //{
+        //    isGrounded = true;
+        //}
+        isGrounded = true;
     }
 
     protected virtual void Specialability() { }

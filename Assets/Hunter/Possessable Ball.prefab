@@ -180,10 +180,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14b12a0177eb1ee4bb6e1384487ace39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
-  turnSpeed: 40
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  moveSpeed: 5
   jumpForce: 5
-  isGrounded: 1
   isControlled: 0
 --- !u!114 &493746161304652275
 MonoBehaviour:
