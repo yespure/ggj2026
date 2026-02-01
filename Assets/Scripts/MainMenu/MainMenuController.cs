@@ -52,6 +52,22 @@ public class MainMenuController : MonoBehaviour
         // 记录你在 Inspector 面板中预设的初始速度
         // initialXSpeed = freeLookCam.m_XAxis.m_MaxSpeed;
         // initialYSpeed = freeLookCam.m_YAxis.m_MaxSpeed;
+        // if (currentScene.name == "wuhuandao -B")
+        // {
+        //     Debug.Log(currentScene.name);
+        //     hideAllButtons = true;
+
+        //     foreach (Button button in onlineButtons)
+        //     {
+        //         if (button != null)
+        //         {
+        //             button.gameObject.SetActive(false);
+        //         }
+        //         else return;
+        //     }
+            
+        // }
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -72,11 +88,7 @@ public class MainMenuController : MonoBehaviour
             
         }
 
-        // if (currentScene.name == "wuhuandao -B")
-        // {
-            
-        //     OnHideAllButtons();
-        // }
+
     }
 
     public void OnSettingButtonClicked()
