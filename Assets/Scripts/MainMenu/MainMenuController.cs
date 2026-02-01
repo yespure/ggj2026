@@ -38,6 +38,9 @@ public class MainMenuController : MonoBehaviour
     public float yOffset = 100f;
     private float initialXSpeed;
     private float initialYSpeed;
+    private bool switchToMain;
+    private bool showExitButton = false;
+    private bool hideAllButtons = false;
     
 
 
@@ -57,10 +60,15 @@ public class MainMenuController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.Escape))
-        // {
-        //     settingPanel.SetActive(false);
-        // }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            showExitButton = !showExitButton;
+            if (hideAllButtons)
+            {   
+                OnEscKeyboardDown();
+            }
+            
+        }
     }
 
     public void OnSettingButtonClicked()
@@ -71,34 +79,8 @@ public class MainMenuController : MonoBehaviour
 
     public void OnLogginButtonClicked()
     {
-        // Hide main menu buttons, one by one
-        Sequence animatedUI_HideMain = DOTween.Sequence();
-        for (int i = 0; i < mainMenuButtons.Length; i++)
-        {
-            if (mainMenuButtons[i] == null) return;
-
-            float targetY = i * yOffset;
-            Vector3 targetPos = new(-600, targetY, 0);
-
-            animatedUI_HideMain.Append(mainMenuButtons[i].GetComponent<RectTransform>().DOAnchorPos(targetPos, 0.8f)).SetEase(Ease.OutBack);
-            // animatedUI_HideMain.AppendInterval(-0.1f);
-        }
-        animatedUI_HideMain.Play();
-
-        // Switch UI group to online menu, one by one
-        Sequence animatedUI_showOnline = DOTween.Sequence();
-        for (int i = 0; i < onlineButtons.Length; i++)
-        {
-            if (onlineButtons[i] == null) return;
-
-            float targetY = i * yOffset; // 目标位置的 Y 坐标，根据按钮索引调整间距
-            Vector3 targetPos = new(100, targetY, 0); // 目标位置
-
-            // 在每个动画之间加入xx秒的间隔（或者负数来重叠）
-            animatedUI_showOnline.Append(onlineButtons[i].GetComponent<RectTransform>().DOAnchorPos(targetPos, 0.8f)).SetEase(Ease.OutBack);
-            // animatedUI_showOnline.AppendInterval(-0.1f); // 这样下一个按钮会提前xx秒开始动
-        }
-        animatedUI_showOnline.Play();
+        switchToMain = false;
+        SwitchMainButtons();
 
         settingPanelIsOut = false;
         settingPanel.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, settingPanelIsOut ? 0 : 2000), 0.6f).SetEase(Ease.OutBack);
@@ -111,22 +93,125 @@ public class MainMenuController : MonoBehaviour
     public void OnHostGameButtonClicked()
     {
         // Enter the lobby as host
-        SceneManager.LoadScene("HostGameScene");
+        OnHideAllButtons();
+
+
         Debug.Log("Host Game Button Clicked");
     }
 
-    public void OnJoinInButtonClicked()
+    public void OnJoinGameButtonClicked()
     {
         // Show join game panel
         joinGamePanelIsOut = !joinGamePanelIsOut;
         joinGamePanel.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, joinGamePanelIsOut ? 0 : 2000), 0.6f).SetEase(Ease.OutBack);
         
-        // Get the IP address
+    }
+
+    public void OnJoinInButtonClicked()
+    {
+        // Join the game with the provided IP address
         string ipAddress = hostIP.text;
+        Debug.Log("Joining game at IP: " + ipAddress);
     }
 
     public void OnBackButtonClicked()
     {
+        switchToMain = true;
+        SwitchMainButtons();
+
+        joinGamePanelIsOut = false;
+        joinGamePanel.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, joinGamePanelIsOut ? 0 : 2000), 0.6f).SetEase(Ease.OutBack);
+
+
+        // Debug.Log("Exit Lobby Button Clicked");
+    }
+
+    public void OnExitMainButtonClicked()
+    {
+        // Exit the game
+        Application.Quit();
+    }
+
+    public void SwitchMainButtons()
+    {
+        if (switchToMain)
+        {
+            // Hide online buttons, one by one
+            Sequence animatedUI_HideOnline = DOTween.Sequence();
+            for (int i = 0; i < onlineButtons.Length; i++)
+            {
+                if (onlineButtons[i] == null) return;
+
+                float targetY = i * yOffset;
+                Vector3 targetPos = new(-600, targetY, 0);
+
+                animatedUI_HideOnline.Append(onlineButtons[i].GetComponent<RectTransform>().DOAnchorPos(targetPos, 0.8f)).SetEase(Ease.OutBack);
+            }
+            animatedUI_HideOnline.Play();
+
+            // Switch UI group to main menu, one by one
+            Sequence animatedUI_ShowMain = DOTween.Sequence();
+            for (int i = 0; i < mainMenuButtons.Length; i++)
+            {
+                if (mainMenuButtons[i] == null) return;
+
+                float targetY = i * yOffset;
+                Vector3 targetPos = new(100, targetY, 0);
+
+                animatedUI_ShowMain.Append(mainMenuButtons[i].GetComponent<RectTransform>().DOAnchorPos(targetPos, 0.8f)).SetEase(Ease.OutBack);
+            }
+            animatedUI_ShowMain.Play();
+        }
+        else
+        {
+            // Hide main menu buttons, one by one
+            Sequence animatedUI_HideMain = DOTween.Sequence();
+            for (int i = 0; i < mainMenuButtons.Length; i++)
+            {
+                if (mainMenuButtons[i] == null) return;
+
+                float targetY = i * yOffset;
+                Vector3 targetPos = new(-600, targetY, 0);
+
+                animatedUI_HideMain.Append(mainMenuButtons[i].GetComponent<RectTransform>().DOAnchorPos(targetPos, 0.8f)).SetEase(Ease.OutBack);
+                // animatedUI_HideMain.AppendInterval(-0.1f);
+            }
+            animatedUI_HideMain.Play();
+
+            // Switch UI group to online menu, one by one
+            Sequence animatedUI_showOnline = DOTween.Sequence();
+            for (int i = 0; i < onlineButtons.Length; i++)
+            {
+                if (onlineButtons[i] == null) return;
+
+                float targetY = i * yOffset; // 目标位置的 Y 坐标，根据按钮索引调整间距
+                Vector3 targetPos = new(100, targetY, 0); // 目标位置
+
+                // 在每个动画之间加入xx秒的间隔（或者负数来重叠）
+                animatedUI_showOnline.Append(onlineButtons[i].GetComponent<RectTransform>().DOAnchorPos(targetPos, 0.8f)).SetEase(Ease.OutBack);
+                // animatedUI_showOnline.AppendInterval(-0.1f); // 这样下一个按钮会提前xx秒开始动
+            }
+            animatedUI_showOnline.Play();
+        }
+        
+    }
+
+    public void OnHideAllButtons()
+    {
+        // // Hide main menu buttons, one by one
+        // Sequence animatedUI_HideMain = DOTween.Sequence();
+        // for (int i = 0; i < mainMenuButtons.Length; i++)
+        // {
+        //     if (mainMenuButtons[i] == null) return;
+
+        //     float targetY = i * yOffset;
+        //     Vector3 targetPos = new(-600, targetY, 0);
+
+        //     animatedUI_HideMain.Append(mainMenuButtons[i].GetComponent<RectTransform>().DOAnchorPos(targetPos, 0.8f)).SetEase(Ease.OutBack);
+        //     // animatedUI_HideMain.AppendInterval(-0.1f);
+        // }
+        // animatedUI_HideMain.Play();
+
         // Hide online buttons, one by one
         Sequence animatedUI_HideOnline = DOTween.Sequence();
         for (int i = 0; i < onlineButtons.Length; i++)
@@ -140,30 +225,13 @@ public class MainMenuController : MonoBehaviour
         }
         animatedUI_HideOnline.Play();
 
-        // Switch UI group to main menu, one by one
-        Sequence animatedUI_ShowMain = DOTween.Sequence();
-        for (int i = 0; i < mainMenuButtons.Length; i++)
-        {
-            if (mainMenuButtons[i] == null) return;
-
-            float targetY = i * yOffset;
-            Vector3 targetPos = new(100, targetY, 0);
-
-            animatedUI_ShowMain.Append(mainMenuButtons[i].GetComponent<RectTransform>().DOAnchorPos(targetPos, 0.8f)).SetEase(Ease.OutBack);
-        }
-        animatedUI_ShowMain.Play();
-
-        joinGamePanelIsOut = false;
-        joinGamePanel.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, joinGamePanelIsOut ? 0 : 2000), 0.6f).SetEase(Ease.OutBack);
-
-
-        // Debug.Log("Exit Lobby Button Clicked");
+        hideAllButtons = true;
     }
 
-    public void OnExitMainButtonClicked()
+    public void OnEscKeyboardDown()
     {
-        // Exit the game
-        Application.Quit();
+        mainMenuButtons[2].GetComponent<RectTransform>().DOAnchorPos(new Vector2(showExitButton ? 100 : -600, -300), 0.8f).SetEase(Ease.OutBack);
+
     }
 
     public void UpdateBGM(float value)
