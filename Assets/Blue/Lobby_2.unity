@@ -3959,16 +3959,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 198082888}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 422982452}
+  m_Father: {fileID: 1139889376}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 466, y: -323}
+  m_AnchoredPosition: {x: 200, y: -51}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &198082890
@@ -7389,10 +7389,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1952387083}
-  - {fileID: 1278356263}
-  - {fileID: 198082889}
-  - {fileID: 1327680497}
   - {fileID: 1139889376}
+  - {fileID: 1327680497}
   - {fileID: 2045214632}
   - {fileID: 789103474}
   m_Father: {fileID: 0}
@@ -21181,6 +21179,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 198082889}
   - {fileID: 551454755}
   - {fileID: 1660149780}
   - {fileID: 1868565560}
@@ -23329,81 +23328,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1270054626}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1278356262
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1278356263}
-  - component: {fileID: 1278356265}
-  - component: {fileID: 1278356264}
-  m_Layer: 5
-  m_Name: SomeImage
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1278356263
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278356262}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 422982452}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -787.1, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1278356264
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278356262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1278356265
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278356262}
-  m_CullTransparentMesh: 1
 --- !u!1001 &1280673296
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25280,7 +25204,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1431926539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36362,6 +36286,7 @@ MonoBehaviour:
   - {fileID: 400161906}
   - {fileID: 1019505750}
   settingButton: {fileID: 1660149776}
+  logoImage: {fileID: 198082890}
   settingPanel: {fileID: 1243818628}
   audioMixer: {fileID: 24100000, guid: e95d3c4eb4a1b504587da00cc564f3fa, type: 2}
   volParameter:
@@ -36376,6 +36301,7 @@ MonoBehaviour:
   joinInButton: {fileID: 669283729}
   hostIP: {fileID: 258178546}
   yOffset: -150
+  globalVolDOF: {fileID: 1431926538}
 --- !u!224 &1952387083
 RectTransform:
   m_ObjectHideFlags: 0
@@ -77275,9 +77201,9 @@ SceneRoots:
   - {fileID: 571468899}
   - {fileID: 2059336383}
   - {fileID: 541642357}
+  - {fileID: 1431926540}
   - {fileID: 1599046117}
   - {fileID: 1916510806}
-  - {fileID: 1431926540}
   - {fileID: 786961808}
   - {fileID: 845546057}
   - {fileID: 93012924}

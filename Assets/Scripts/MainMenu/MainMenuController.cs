@@ -16,6 +16,7 @@ public class MainMenuController : MonoBehaviour
     public Button[] mainMenuButtons = new Button[2];    //0-Loggin, 1-Nothing, 2-Nothing, 3-Exit. --Nothing means empty, the button is transparent.
     public Button[] onlineButtons = new Button[2];      //0-Host Game, 1-Join Game, 2-Nothing, 3-Exit.
     public Button settingButton;
+    public Image logoImage;
     [Space]
 
     [Header("Setting Panel")]
@@ -43,6 +44,7 @@ public class MainMenuController : MonoBehaviour
     private bool hideAllButtons = false;
 
     private Scene currentScene;
+    public GameObject globalVolDOF;
     
 
 
@@ -81,6 +83,9 @@ public class MainMenuController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             showExitButton = !showExitButton;
+            if (showExitButton) {Cursor.visible = true;}
+            else {Cursor.visible = false;}
+
             if (hideAllButtons)
             {   
                 OnEscKeyboardDown();
@@ -114,9 +119,12 @@ public class MainMenuController : MonoBehaviour
     {
         // Enter the lobby as host
         OnHideAllButtons();
+        globalVolDOF.SetActive(false);
+        Cursor.visible = false;
 
+        logoImage.GetComponent<RectTransform>().DOAnchorPos(new Vector2(-600, -51), 0.6f).SetEase(Ease.OutBack);
 
-        Debug.Log("Host Game Button Clicked");
+        // Debug.Log("Host Game Button Clicked");
     }
 
     public void OnJoinGameButtonClicked()
@@ -251,7 +259,6 @@ public class MainMenuController : MonoBehaviour
     public void OnEscKeyboardDown()
     {
         mainMenuButtons[2].GetComponent<RectTransform>().DOAnchorPos(new Vector2(showExitButton ? 100 : -600, -300), 0.8f).SetEase(Ease.OutBack);
-
     }
 
     public void UpdateBGM(float value)
