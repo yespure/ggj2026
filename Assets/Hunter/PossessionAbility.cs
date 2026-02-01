@@ -109,7 +109,7 @@ public class PossessionAbility : MonoBehaviour
             if (distance < nearestDistance)
             {
                 nearestDistance = distance;
-                nearestTarget = hit.GetComponent<ObjectController>();
+                nearestTarget = hit.GetComponentInParent<ObjectController>();
             }
         }
 

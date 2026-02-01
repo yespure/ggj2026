@@ -28,7 +28,7 @@ public class MaskController : NetworkBehaviour
     void Awake()
     {
         // 在 Awake 获取组件，确保所有客户端（包括非LocalPlayer）都能初始化引用
-        col = GetComponent<Collider>();
+        col = GetComponentInChildren<Collider>();
         rb = GetComponent<Rigidbody>();
         netTrans = GetComponent<NetworkTransformReliable>();
     }
