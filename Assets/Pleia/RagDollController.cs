@@ -41,13 +41,13 @@ public class RagDollController : MonoBehaviour
     
     void OnEnable()
     {
-        Character.C_IsPossessing += C_IsDead;
+        //Character.C_IsPossessing += C_IsDead;
         Balls.B_IsPossessing += B_IsDead;
     }
 
     void OnDisable()
     {
-        Character.C_IsPossessing -= C_IsDead;
+        //Character.C_IsPossessing -= C_IsDead;
         Balls.B_IsPossessing -= B_IsDead;
     }
 
