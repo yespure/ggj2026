@@ -41,6 +41,8 @@ public class MainMenuController : MonoBehaviour
     private bool switchToMain;
     private bool showExitButton = false;
     private bool hideAllButtons = false;
+
+    private Scene currentScene;
     
 
 
@@ -54,7 +56,7 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
-
+        currentScene = SceneManager.GetActiveScene();
     }
 
     // Update is called once per frame
@@ -69,6 +71,12 @@ public class MainMenuController : MonoBehaviour
             }
             
         }
+
+        // if (currentScene.name == "wuhuandao -B")
+        // {
+            
+        //     OnHideAllButtons();
+        // }
     }
 
     public void OnSettingButtonClicked()

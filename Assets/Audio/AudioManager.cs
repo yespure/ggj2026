@@ -20,8 +20,9 @@ public class AudioManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            // 如果你希望跨场景不销毁，可以取消下面这一行的注释
-            // DontDestroyOnLoad(gameObject);
+
+            transform.SetParent(null);
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -31,6 +32,9 @@ public class AudioManager : MonoBehaviour
 
         sourceSFX.playOnAwake = false;
         sourceBGM.playOnAwake = false;
+
+        // Load saved audio settings when switch scenes
+        // LoadAudioSettings();
     }
 
     // 提供一个通用的播放接口
@@ -53,4 +57,6 @@ public class AudioManager : MonoBehaviour
         if (hoverSound != null)
             sourceSFX.PlayOneShot(hoverSound);
     }
+
+    
 }
